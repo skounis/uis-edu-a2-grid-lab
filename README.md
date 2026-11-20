@@ -48,11 +48,16 @@ The build uses relative paths (`base: './'`), so `dist/` also works from any sta
 ## How the import works
 
 The importer looks for the sheet named `A2` (or a sheet whose name starts with A2) and reads rows 14 to 22.
-The first value column is V (column 22). Each level takes three columns: value, code and a spare column, so the
+The first value column is V (column 22). Each level takes three columns: value, code and comment, so the
 next level starts at Y, then AB, and so on. The code of a cell is in the column right after its value.
 These addresses come from the A2 data model (`docs/architecture/data-model/a2.md` in the uis-d-platform GitHub repository).
 
-Values keep what the file holds; spaces and commas are removed. A formula cell gives its saved result.
+Values keep what the file holds; spaces and commas are removed. A formula cell gives its saved result. The totals
+of the UIS questionnaire are formulas, and a file may have no saved result for them; these are read as empty and
+the grid fills in the empty totals from their parts. The comments (third column) are not imported yet.
+
+The questionnaire has data validations over whole columns. ExcelJS would expand them cell by cell, which takes
+minutes, so the import skips them (`ignoreNodes: ['dataValidations']`).
 Codes are turned to capitals. A value that is not a number, or a code other than Z, M, X or W, is left out and listed
 under "Not imported". The totals in the file are imported as they are, and the checks then mark any total that does
 not match its parts.

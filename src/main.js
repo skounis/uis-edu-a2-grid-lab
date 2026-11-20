@@ -24,8 +24,13 @@ document.getElementById('file').addEventListener('change', async (ev) => {
       return;
     }
     grid.setValues(result.values);
+    grid.fillTotals();
     grid.refreshChecks();
     const lines = [`Imported sheet "${result.sheet}" of ${file.name}.`];
+    if (result.formulas) {
+      lines.push(`${result.formulas} cells are formulas with no result saved in the file, so they were read as empty. `
+        + 'The grid filled in the empty totals from their parts.');
+    }
     if (result.problems.length) lines.push('', 'Not imported:', ...result.problems);
     report.textContent = lines.join('\n');
   } catch (e) {

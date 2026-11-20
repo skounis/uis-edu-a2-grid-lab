@@ -145,6 +145,12 @@ export function createGrid(host, { onChange } = {}) {
     return msgs;
   }
 
+  // Fills in every empty total from its parts and keeps the totals that have a number (used after an import).
+  function fillTotals() {
+    const ids = CELLS.map((c) => c.id);
+    setValues(new Map(fill(get, TOTALS, ids, TOTALS.map(() => null)).map(([id, value]) => [id, { ...get(id), value }])));
+  }
+
   function values() {
     return new Map(CELLS.map((c) => [c.id, get(c.id)]));
   }
@@ -155,5 +161,5 @@ export function createGrid(host, { onChange } = {}) {
   }
 
   refreshChecks();
-  return { ws, get, setValues, values, refreshChecks, clear };
+  return { ws, get, setValues, fillTotals, values, refreshChecks, clear };
 }
