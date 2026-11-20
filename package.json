@@ -1,0 +1,24 @@
+{
+  "name": "a2-grid-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A lab for the A2 table of the UIS education survey in a Jspreadsheet CE grid, and its import from the Excel questionnaire. Not connected to the D-Platform.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "sample": "node scripts/make-sample-xlsx.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "exceljs": "4.4.0",
+    "jspreadsheet-ce": "5.0.4",
+    "jsuites": "5.13.5"
+  },
+  "devDependencies": {
+    "vite": "7.1.12",
+    "vitest": "3.2.4"
+  }
+}

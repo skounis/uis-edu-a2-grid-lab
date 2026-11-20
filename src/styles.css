@@ -1,0 +1,19 @@
+/* The look of the D-Platform (DHIS2 UI tokens), as in the A2 forms of the uis-d-platform GitHub repository. */
+:root { --grey900: #212934; --grey700: #4a5768; --grey100: #f8f9fa; --blue600: #147cd7; }
+body { margin: 0; padding: 16px; font-family: Roboto, Arial, sans-serif; color: var(--grey900); background: #ffffff; }
+h1 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+header p { font-size: 13px; color: var(--grey700); margin: 0 0 12px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+.toolbar .button, .toolbar button { padding: 6px 12px; border: 1px solid #a0adba; border-radius: 4px; background: var(--grey100); cursor: pointer; font: inherit; }
+#status { color: var(--grey700); }
+#report { font-size: 12px; color: var(--grey700); white-space: pre-wrap; }
+
+#a2-grid { font-size: 13px; }
+#a2-grid .jss_worksheet thead td { background-color: var(--grey100); color: var(--grey900); font-weight: 500; white-space: normal; line-height: 15px; }
+#a2-grid .jss_worksheet tbody td { height: 24px; }
+#a2-grid .jss_worksheet tbody td.readonly { color: var(--grey900); background-color: var(--grey100); }
+/* A cell that fails a check is yellow, as in the A2 sheet. The message shows on hover. */
+#a2-grid .jss_worksheet tbody td.a2-check { background-color: #FFFF00 !important; }
+/* Code cells: the letter is centred; the list arrow shows, smaller, only on hover, since one click opens the list. */
+#a2-grid .jss_worksheet > tbody > tr > td.jss_dropdown { background-image: none; text-align: center; padding-left: 0; padding-right: 0; cursor: pointer; }
+#a2-grid .jss_worksheet > tbody > tr > td.jss_dropdown:hover { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5H7z' fill='%234a5768'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 14px 14px; background-position: right 0 center; }

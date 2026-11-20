@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A2 grid lab</title>
+  </head>
+  <body>
+    <header>
+      <h1>A2: Number of students by level of education, intensity of participation, type of institution and sex</h1>
+      <p>A lab for the A2 table in a data grid. Nothing here is saved to the D-Platform.</p>
+    </header>
+    <section class="toolbar">
+      <label class="button">Import A2 from an Excel file (.xlsx)
+        <input id="file" type="file" accept=".xlsx" hidden />
+      </label>
+      <button id="clear" type="button">Clear the grid</button>
+      <span id="status"></span>
+    </section>
+    <div id="a2-grid"></div>
+    <pre id="report"></pre>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
