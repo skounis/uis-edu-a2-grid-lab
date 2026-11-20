@@ -1,6 +1,7 @@
-# A2 grid lab
+# uis-edu-a2-grid-lab
 
-A small JavaScript project to try Jspreadsheet CE with the A2 table of the UIS questionnaire, outside the D-Platform.
+A small JavaScript project to try Jspreadsheet CE with table A2 of UIS questionnaire A (2026 Survey of Formal
+Education, UIS_ED_A_2026_EN.xlsx), outside the D-Platform.
 It builds a grid with the layout of sheet A2 of the Excel questionnaire (value, code and comment for each level),
 fills in the totals, applies the rules of the sheet and imports A2 from an Excel file (.xlsx). Nothing here is saved to the D-Platform.
 

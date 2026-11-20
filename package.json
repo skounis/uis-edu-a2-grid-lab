@@ -1,5 +1,5 @@
 {
-  "name": "a2-grid-lab",
+  "name": "uis-edu-a2-grid-lab",
   "version": "0.1.0",
   "private": true,
   "description": "A lab for the A2 table of the UIS education survey in a Jspreadsheet CE grid, and its import from the Excel questionnaire. Not connected to the D-Platform.",
