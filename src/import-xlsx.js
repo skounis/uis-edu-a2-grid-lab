@@ -1,9 +1,10 @@
 // Import of the A2 sheet from an Excel questionnaire (.xlsx) into the cells of the grid.
-// It reads, for each of the 144 cells, the value and the code at the addresses of the A2 data model
+// It reads, for each of the 144 cells, the value, the code and the comment at the addresses of the A2 data model
 // (see a2-layout.js). A total that is a formula in the sheet is read as the result Excel saved with the file;
 // a formula with no saved result is read as empty, and the grid fills it in from its parts.
 import ExcelJS from 'exceljs';
-import { CELLS, CODES, EXCEL_SHEET } from './a2-layout.js';
+import { CELLS, EXCEL_SHEET } from './a2-layout.js';
+import { clean, refusal } from './entry-rules.js';
 
 // The text of an Excel cell value: a number, a string, a rich text, or the saved result of a formula.
 export function cellText(v) {
@@ -31,7 +32,7 @@ export function findSheet(workbook) {
 const isFormula = (v) => v !== null && typeof v === 'object' && ('formula' in v || 'sharedFormula' in v);
 
 // Reads a workbook (ArrayBuffer or Buffer).
-// Returns { sheet, values: Map(id -> { value, code }), problems, formulas } where formulas counts the cells that are
+// Returns { sheet, values: Map(id -> { value, code, comment }), problems, formulas } where formulas counts the cells that are
 // formulas with no saved result.
 export async function importA2(buffer) {
   const workbook = new ExcelJS.Workbook();
@@ -49,20 +50,16 @@ export async function importA2(buffer) {
     const raw = ws.getCell(c.excelValue).value;
     const rawCode = ws.getCell(c.excelCode).value;
     for (const r of [raw, rawCode]) if (isFormula(r) && !('result' in r)) formulas += 1;
-    let value = cellText(raw);
-    const code = cellText(rawCode).toUpperCase();
-    if (value !== '' && Number.isNaN(Number(value.replace(/[\s,]/g, '')))) {
-      problems.push(`${c.excelValue}: "${value}" is not a number, so it was left out.`);
-      value = '';
-    } else {
-      value = value.replace(/[\s,]/g, '');
+    // Rules 1 to 3: an entry the sheet would refuse is left out and listed.
+    const entry = {};
+    for (const [kind, address, v] of [['value', c.excelValue, raw], ['code', c.excelCode, rawCode],
+      ['comment', c.excelComment, ws.getCell(c.excelComment).value]]) {
+      const s = clean(kind, cellText(v));
+      const why = refusal(kind, s);
+      if (why) problems.push(`${address}: ${why} It was left out.`);
+      entry[kind] = why ? '' : s;
     }
-    if (code !== '' && !CODES.includes(code)) {
-      problems.push(`${c.excelCode}: "${code}" is not one of the codes ${CODES.join(', ')}, so it was left out.`);
-      values.set(c.id, { value, code: '' });
-    } else {
-      values.set(c.id, { value, code });
-    }
+    values.set(c.id, entry);
   }
   return { sheet: ws.name, values, problems, formulas };
 }

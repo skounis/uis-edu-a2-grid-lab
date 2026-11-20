@@ -1,7 +1,7 @@
-// The layout of the A2 sheet of UIS_ED_A_2026_EN.xlsx: 16 levels across the top, each with a value and a code, and
-// 9 rows of type of institution and sex. The Excel addresses follow "The cells of A2" in the A2 data model of the
+// The layout of the A2 sheet of UIS_ED_A_2026_EN.xlsx: 16 levels across the top, each with a value, a code and a
+// comment, and 9 rows of type of institution and sex. The Excel addresses follow "The cells of A2" in the A2 data model of the
 // uis-d-platform GitHub repository (docs/architecture/data-model/a2.md): rows 14 to 22, the value of the first level
-// in column V and its code in W, then every 3 columns (Y and Z, AB and AC, ...).
+// in column V, its code in W and its comment in X, then every 3 columns (Y, Z and AA, AB, AC and AD, ...).
 
 // key, programme, ISCED label, and the levels a total level adds up (null for a level the country fills in).
 export const LEVELS = [
@@ -37,10 +37,10 @@ export const ROWS = SECTORS.flatMap(([sector, sectorLabel]) =>
 
 export const CODES = ['Z', 'M', 'X', 'W'];
 
-// Grid columns: 2 label columns, then a value and a code column for each level.
+// Grid columns: 2 label columns, then a value, a code and a comment column for each level, as in the sheet.
 export const LABEL_COLUMNS = 2;
-export const valueColumn = (levelIndex) => LABEL_COLUMNS + 2 * levelIndex;
-export const codeColumn = (levelIndex) => valueColumn(levelIndex) + 1;
+export const KINDS = ['value', 'code', 'comment'];
+export const valueColumn = (levelIndex) => LABEL_COLUMNS + 3 * levelIndex;
 
 // Excel addresses.
 export const EXCEL_SHEET = 'A2';
@@ -55,8 +55,9 @@ export function columnLetter(n) {
   }
   return s;
 }
-export function excelAddress(levelIndex, rowIndex, isCode = false) {
-  const col = EXCEL_FIRST_VALUE_COLUMN + 3 * levelIndex + (isCode ? 1 : 0);
+// The Excel address of the value (kind 'value'), code or comment of a cell.
+export function excelAddress(levelIndex, rowIndex, kind = 'value') {
+  const col = EXCEL_FIRST_VALUE_COLUMN + 3 * levelIndex + KINDS.indexOf(kind);
   return columnLetter(col) + (EXCEL_FIRST_ROW + rowIndex);
 }
 
@@ -64,12 +65,13 @@ export function isTotalCell(level, row) {
   return Boolean(level.parts) || row.sector === 'T' || row.sex === 'T';
 }
 
-// The 144 cells, each with its grid position and its Excel addresses.
+// The 144 cells, each with its grid position (x is the value column; the code and comment follow) and its Excel
+// addresses.
 export const CELLS = LEVELS.flatMap((level, li) => ROWS.map((row, ri) => ({
   id: `${level.key}|${row.sector}|${row.sex}`,
   level, row,
   x: valueColumn(li), y: ri,
-  excelValue: excelAddress(li, ri), excelCode: excelAddress(li, ri, true),
+  excelValue: excelAddress(li, ri), excelCode: excelAddress(li, ri, 'code'), excelComment: excelAddress(li, ri, 'comment'),
   total: isTotalCell(level, row),
 })));
 const CELL_BY_ID = new Map(CELLS.map((c) => [c.id, c]));

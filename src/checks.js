@@ -1,6 +1,7 @@
-// The checks of the A2 sheet that depend on the codes (rules 4 and 6 to 9 of a2-validation-rules.md in the
-// uis-d-platform GitHub repository), as in the EDU A form. Returns Map(cell id + ':value' or ':code' -> [messages]).
-// Rule 5 (a comment with X and W) needs the comments of the D-Platform, so it is not in this lab.
+// The checks of the A2 sheet that mark a cell yellow (rules 4 to 9 of a2-validation-rules.md in the uis-d-platform
+// GitHub repository), with the messages of the EDU A form. Returns Map(cell id + ':value', ':code' or ':comment' ->
+// [messages]). Rules 1 to 3 refuse an entry instead (entry-rules.js). Rule 10 compares A2 with A3, which is not in
+// this lab.
 import { CELLS } from './a2-layout.js';
 import { expected, part } from './totals.js';
 
@@ -11,6 +12,10 @@ const CODE_MSG = {
   M: 'M means the data are missing, so this cell should be empty.',
   X: 'X means these data are counted in another cell, so this cell should be empty.',
   W: 'W means this number includes other data, so enter a number above 0.',
+};
+const COMMENT_MSG = {
+  X: 'Code X needs a comment that says where these data are counted. Add it in the Comment column.',
+  W: 'Code W needs a comment that says what other data this number includes. Add it in the Comment column.',
 };
 
 function expectedCode(get, t) {
@@ -38,12 +43,14 @@ export function check(get, totals) {
   const msgs = new Map();
   const add = (key, m) => { if (!msgs.has(key)) msgs.set(key, []); msgs.get(key).push(m); };
   for (const c of CELLS) {
-    const { value: v, code: k } = get(c.id);
+    const { value: v, code: k, comment = '' } = get(c.id);
     let bad = false;
     if (k === 'Z') bad = v !== '' && !(isNum(v) && Number(v) === 0);
     else if (k === 'M' || k === 'X') bad = v !== '';
     else if (k === 'W') bad = !(isNum(v) && Number(v) > 0);
     if (bad) { add(`${c.id}:value`, CODE_MSG[k]); add(`${c.id}:code`, CODE_MSG[k]); }
+    // Rule 5: a comment goes with X and W.
+    if ((k === 'X' || k === 'W') && comment === '') { add(`${c.id}:code`, COMMENT_MSG[k]); add(`${c.id}:comment`, COMMENT_MSG[k]); }
   }
   for (const t of totals) {
     const cur = get(t.total).value;

@@ -1,12 +1,16 @@
 import './styles.css';
 import { createGrid } from './grid.js';
 
-const grid = createGrid(document.getElementById('a2-grid'), { onChange: showStatus });
 const status = document.getElementById('status');
 const report = document.getElementById('report');
+// Rules 1 to 3: an entry the sheet would refuse is not taken, and the report says why.
+const grid = createGrid(document.getElementById('a2-grid'), {
+  onChange: showStatus,
+  onRefuse: (msgs) => { report.textContent = ['Not taken:', ...msgs].join('\n'); },
+});
 
 function showStatus() {
-  const n = [...grid.values().values()].filter((v) => v.value !== '' || v.code !== '').length;
+  const n = [...grid.values().values()].filter((v) => v.value !== '' || v.code !== '' || v.comment !== '').length;
   const marked = document.querySelectorAll('#a2-grid td.a2-check').length;
   status.textContent = `${n} of 144 cells filled. ${marked} cells fail a check.`;
 }

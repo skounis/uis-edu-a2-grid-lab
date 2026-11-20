@@ -15,6 +15,8 @@ describe('A2 layout', () => {
     expect([cell('02', 'PUB', 'M').excelValue, cell('02', 'PUB', 'M').excelCode]).toEqual(['Y14', 'Z14']);
     expect([cell('0', 'PUB', 'M').excelValue, cell('0', 'PUB', 'M').excelCode]).toEqual(['AB14', 'AC14']);
     expect(cell('24+34', 'PUB', 'M').excelValue).toBe('AZ14');
+    expect(cell('01', 'PUB', 'M').excelComment).toBe('X14');
+    expect(cell('4', 'T', 'T').excelComment).toBe('BQ22');
     expect([cell('4', 'PUB', 'M').excelValue, cell('4', 'PUB', 'M').excelCode]).toEqual(['BO14', 'BP14']);
   });
   it('puts every total after the totals it is made of', () => {

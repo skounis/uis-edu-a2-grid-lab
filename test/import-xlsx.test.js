@@ -18,16 +18,16 @@ describe('import of A2 from an .xlsx file', () => {
     });
     const { sheet, values, problems } = await importA2(buf);
     expect(sheet).toBe('A2');
-    expect(values.get(cellId('01', 'PUB', 'M'))).toEqual({ value: '10', code: '' });
-    expect(values.get(cellId('02', 'PUB', 'M'))).toEqual({ value: '1200', code: 'W' });
+    expect(values.get(cellId('01', 'PUB', 'M'))).toEqual({ value: '10', code: '', comment: '' });
+    expect(values.get(cellId('02', 'PUB', 'M'))).toEqual({ value: '1200', code: 'W', comment: '' });
     expect(values.get(cellId('0', 'PUB', 'M')).value).toBe('1210');
-    expect(values.get(cellId('01', 'PUB', 'F'))).toEqual({ value: '', code: '' });
+    expect(values.get(cellId('01', 'PUB', 'F'))).toEqual({ value: '', code: '', comment: '' });
     expect(problems).toHaveLength(2);
   });
   it('reads a formula with no saved result as empty and counts it', async () => {
     const buf = await workbook('A2', { V14: 4, Y14: 5, AB14: { formula: 'V14+Y14' }, AC14: { formula: 'W14' } });
     const { values, problems, formulas } = await importA2(buf);
-    expect(values.get(cellId('0', 'PUB', 'M'))).toEqual({ value: '', code: '' });
+    expect(values.get(cellId('0', 'PUB', 'M'))).toEqual({ value: '', code: '', comment: '' });
     expect(problems).toHaveLength(0);
     expect(formulas).toBe(2);
   });
@@ -40,6 +40,14 @@ describe('import of A2 from an .xlsx file', () => {
     const { values } = await importA2(await wb.xlsx.writeBuffer());
     expect(values.get(cellId('01', 'PUB', 'M')).value).toBe('1');
     expect(Date.now() - start).toBeLessThan(5000);
+  });
+  it('reads comments and leaves out what rules 1 to 3 refuse', async () => {
+    const buf = await workbook('A2', { V14: 5, W14: 'W', X14: 'Includes ISCED 02', V15: -3, Y14: 2, AA14: 'x' });
+    const { values, problems } = await importA2(buf);
+    expect(values.get(cellId('01', 'PUB', 'M'))).toEqual({ value: '5', code: 'W', comment: 'Includes ISCED 02' });
+    expect(values.get(cellId('01', 'PUB', 'F')).value).toBe('');
+    expect(values.get(cellId('02', 'PUB', 'M')).comment).toBe('');
+    expect(problems).toHaveLength(2);
   });
   it('finds a sheet whose name starts with A2, and reports a missing one', async () => {
     expect((await importA2(await workbook('A2 Students', { V14: 1 }))).sheet).toBe('A2 Students');
