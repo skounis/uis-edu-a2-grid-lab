@@ -1,0 +1,18 @@
+{
+  "notes": {
+    "about": "JSON has no comments, so the notes are kept here. This is the input of the lab that is its own: what the grid shows and how. The layout of the A2 sheet, the totals and the Excel addresses come from a2-step1-input.json, a copy of docs/architecture/forms/edu-a/a2-step1-input.json in the uis-d-platform GitHub repository. Same format as docs/architecture/forms/edu-a-grid/a2-grid-step1-input.json there.",
+    "LABEL_COLUMNS": "The 2 columns on the left of the grid, with the type of institution and the sex. title: the header. width: in pixels.",
+    "VALUE_COLUMN": "The value column of each level. title: the header. width: in pixels. align: the alignment of the number.",
+    "CODE_COLUMN": "The code column of each level, a list to pick from. title: the header. width: in pixels. align: the alignment of the letter. codes: the codes in the list and the only codes accepted (rule 2).",
+    "COMMENT_COLUMN": "The comment column of each level. title: the header. width: in pixels. align: the alignment of the text.",
+    "TOTAL_FILLS": "The fills of a total cell, as in the A2 sheet: value light blue, code darker blue."
+  },
+  "LABEL_COLUMNS": [
+    {"title": "Type of institution", "width": 130},
+    {"title": "Sex", "width": 125}
+  ],
+  "VALUE_COLUMN": {"title": "Value", "width": 58, "align": "right"},
+  "CODE_COLUMN": {"title": "Code", "width": 40, "align": "center", "codes": ["Z", "M", "X", "W"]},
+  "COMMENT_COLUMN": {"title": "Comment", "width": 80, "align": "left"},
+  "TOTAL_FILLS": {"value": "#DCE6F1", "code": "#95B3D7"}
+}

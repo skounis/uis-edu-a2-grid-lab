@@ -2,7 +2,7 @@
 import jspreadsheet from 'jspreadsheet-ce';
 import 'jsuites/dist/jsuites.css';
 import 'jspreadsheet-ce/dist/jspreadsheet.css';
-import { CELLS, CODES, GROUPS, KINDS, LABEL_COLUMNS, LEVELS, ROWS, TOTALS, columnLetter } from './a2-layout.js';
+import { CELLS, CODES, GROUPS, KINDS, LABEL_COLUMNS, LEVELS, ROWS, TOTALS, columnLetter, lab } from './a2-layout.js';
 import { fill, snapshot } from './totals.js';
 import { check } from './checks.js';
 import { clean, refusal } from './entry-rules.js';
@@ -12,14 +12,12 @@ for (const c of CELLS) KINDS.forEach((kind, dx) => byPosition.set(`${c.x + dx}:$
 const BY_ID = new Map(CELLS.map((c) => [c.id, c]));
 
 function columns() {
-  const cols = [
-    { type: 'text', title: 'Type of institution', width: 130, readOnly: true },
-    { type: 'text', title: 'Sex', width: 125, readOnly: true },
-  ];
+  const { VALUE_COLUMN: v, CODE_COLUMN: c, COMMENT_COLUMN: m } = lab;
+  const cols = lab.LABEL_COLUMNS.map((l) => ({ type: 'text', title: l.title, width: l.width, readOnly: true }));
   for (let i = 0; i < LEVELS.length; i += 1) {
-    cols.push({ type: 'text', title: 'Value', width: 58, align: 'right' });
-    cols.push({ type: 'dropdown', title: 'Code', width: 40, align: 'center', source: CODES, autocomplete: false });
-    cols.push({ type: 'text', title: 'Comment', width: 80, align: 'left' });
+    cols.push({ type: 'text', title: v.title, width: v.width, align: v.align });
+    cols.push({ type: 'dropdown', title: c.title, width: c.width, align: c.align, source: CODES, autocomplete: false });
+    cols.push({ type: 'text', title: m.title, width: m.width, align: m.align });
   }
   return cols;
 }
@@ -40,8 +38,8 @@ function styles() {
   const style = {};
   for (const c of CELLS) {
     if (!c.total) continue;
-    style[`${columnLetter(c.x + 1)}${c.y + 1}`] = 'background-color: #DCE6F1;';
-    style[`${columnLetter(c.x + 2)}${c.y + 1}`] = 'background-color: #95B3D7;';
+    style[`${columnLetter(c.x + 1)}${c.y + 1}`] = `background-color: ${lab.TOTAL_FILLS.value};`;
+    style[`${columnLetter(c.x + 2)}${c.y + 1}`] = `background-color: ${lab.TOTAL_FILLS.code};`;
   }
   return style;
 }

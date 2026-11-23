@@ -1,0 +1,94 @@
+{
+  "notes": {
+    "about": "JSON has no comments, so the notes are kept here. This is input 1 of the A2 form build (step 1): what was prepared by hand, from the A2 sheet and from our conventions. It holds no UID: the UIDs belong to an instance and are looked up there. Step 2, the pre-process script a2-step2-preprocess.py, reads this file and writes input 2, a2-step2-cells.csv.",
+    "SHEET": "Where the cells are in the A2 sheet of UIS_ED_A_2026_EN.xlsx. name: the sheet. first_value_column: the column of the value of the first level. columns_per_level: each level has a value, a code and a comment column. first_row: the row of the first cell (Public institutions, Males).",
+    "DATA_ELEMENTS": "The codes of the 16 data elements of A2, as in the A2 data model (docs/architecture/data-model/a2.md). Each value data element is followed by its code data element, which adds _STATUS.",
+    "DATA_ELEMENT_NAMING": "Our convention for the code of the data element that stores a cell (decision 0006 and the A2 data model). Start with base. Add level_total when the column is a level total, institutions_total when the row is Total institutions, and sex_total when the sex is Males and females, in that order. The code data element adds status.",
+    "COLS": "The 16 columns of the A2 sheet, from left to right (sheet columns V to BO, one value, code and comment column each). key: a short name of the level used by the build, the ISCED code of the level. programme: the label in row 4 of the sheet. isced: the label in row 5 of the sheet. parts: for a total column, the keys of the columns it adds up; null for a column the country fills in. option: the code of its category option on the D-Platform (decision 0003).",
+    "GROUPS": "The group headers in row 3 of the sheet, from left to right. title: the label. columns: how many columns of COLS the group spans.",
+    "ROWS": "The 3 types of institution down the side of the sheet (column D), in the order of the sheet. key: a short name used by the build; T is the total of Public and Private. label: the label in the sheet. option: the code of its category option on the D-Platform; null for Total, which has no option.",
+    "SEXES": "The 3 rows of each type of institution (column F), in the order of the sheet. key: a short name used by the build; T is the total of Males and Females. label: the label in the sheet. option: the code of its category option on the D-Platform; null for Males and females, which has no option.",
+    "TEXT": "The text the form shows: its title and intro line, the label of the table for screen readers, the corner header of the table in each of the two layouts, the headers of the value and code columns, and the heading of the Indicators block.",
+    "SCRIPT": "true: the form holds the script that fills in the totals and runs the checks. false: no script. A script makes the Data Entry app show the form in its legacy mode.",
+    "IND": "Indicators shown under the table, as a list of {uid, label}. Empty: no Indicators block."
+  },
+  "SHEET": {
+    "name": "A2",
+    "first_value_column": "V",
+    "columns_per_level": 3,
+    "first_row": 14
+  },
+  "DATA_ELEMENTS": [
+    "EDU_A2_STU",
+    "EDU_A2_STU_STATUS",
+    "EDU_A2_STU_SEX_T",
+    "EDU_A2_STU_SEX_T_STATUS",
+    "EDU_A2_STU_INST_T",
+    "EDU_A2_STU_INST_T_STATUS",
+    "EDU_A2_STU_INST_T_SEX_T",
+    "EDU_A2_STU_INST_T_SEX_T_STATUS",
+    "EDU_A2_STU_LEVEL_T",
+    "EDU_A2_STU_LEVEL_T_STATUS",
+    "EDU_A2_STU_LEVEL_T_SEX_T",
+    "EDU_A2_STU_LEVEL_T_SEX_T_STATUS",
+    "EDU_A2_STU_LEVEL_T_INST_T",
+    "EDU_A2_STU_LEVEL_T_INST_T_STATUS",
+    "EDU_A2_STU_LEVEL_T_INST_T_SEX_T",
+    "EDU_A2_STU_LEVEL_T_INST_T_SEX_T_STATUS"
+  ],
+  "DATA_ELEMENT_NAMING": {
+    "base": "EDU_A2_STU",
+    "level_total": "_LEVEL_T",
+    "institutions_total": "_INST_T",
+    "sex_total": "_SEX_T",
+    "status": "_STATUS"
+  },
+  "COLS": [
+    {"key": "01", "programme": "Early childhood educational development", "isced": "ISCED 01", "parts": null, "option": "EDU_ISCED_01"},
+    {"key": "02", "programme": "Pre-primary", "isced": "ISCED 02", "parts": null, "option": "EDU_ISCED_02"},
+    {"key": "0", "programme": "All programmes", "isced": "ISCED 0", "parts": ["01", "02"], "option": "EDU_ISCED_0"},
+    {"key": "1", "programme": "All programmes", "isced": "ISCED 1", "parts": null, "option": "EDU_ISCED_1"},
+    {"key": "24", "programme": "General", "isced": "ISCED 24", "parts": null, "option": "EDU_ISCED_24"},
+    {"key": "25", "programme": "Vocational", "isced": "ISCED 25", "parts": null, "option": "EDU_ISCED_25"},
+    {"key": "2", "programme": "All programmes", "isced": "ISCED 2", "parts": ["24", "25"], "option": "EDU_ISCED_2"},
+    {"key": "34", "programme": "General", "isced": "ISCED 34", "parts": null, "option": "EDU_ISCED_34"},
+    {"key": "35", "programme": "Vocational", "isced": "ISCED 35", "parts": null, "option": "EDU_ISCED_35"},
+    {"key": "3", "programme": "All programmes", "isced": "ISCED 3", "parts": ["34", "35"], "option": "EDU_ISCED_3"},
+    {"key": "24+34", "programme": "General", "isced": "ISCED 24+34", "parts": ["24", "34"], "option": "EDU_ISCED_24_34"},
+    {"key": "25+35", "programme": "Vocational", "isced": "ISCED 25+35", "parts": ["25", "35"], "option": "EDU_ISCED_25_35"},
+    {"key": "2+3", "programme": "All programmes", "isced": "ISCED 2+3", "parts": ["24", "25", "34", "35"], "option": "EDU_ISCED_2_3"},
+    {"key": "44", "programme": "General", "isced": "ISCED 44", "parts": null, "option": "EDU_ISCED_44"},
+    {"key": "45", "programme": "Vocational", "isced": "ISCED 45", "parts": null, "option": "EDU_ISCED_45"},
+    {"key": "4", "programme": "All programmes", "isced": "ISCED 4", "parts": ["44", "45"], "option": "EDU_ISCED_4"}
+  ],
+  "GROUPS": [
+    {"title": "Early childhood education", "columns": 3},
+    {"title": "Primary", "columns": 1},
+    {"title": "Lower secondary", "columns": 3},
+    {"title": "Upper secondary", "columns": 3},
+    {"title": "Total secondary", "columns": 3},
+    {"title": "Post-secondary non-tertiary", "columns": 3}
+  ],
+  "ROWS": [
+    {"key": "PUB", "label": "Public institutions", "option": "EDU_INST_PUB"},
+    {"key": "PRIV", "label": "Private institutions", "option": "EDU_INST_PRIV"},
+    {"key": "T", "label": "Total", "option": null}
+  ],
+  "SEXES": [
+    {"key": "M", "label": "Males", "option": "M"},
+    {"key": "F", "label": "Females", "option": "F"},
+    {"key": "T", "label": "Males and females", "option": null}
+  ],
+  "TEXT": {
+    "title": "A2: Number of students by level of education, intensity of participation, type of institution and sex",
+    "intro": "Students, full- and part-time. Enter each number with its code if needed. To add a comment, open the details of the cell.",
+    "table_label": "A2 students by level, type of institution and sex",
+    "corner_excel_layout": "Type of institution and sex",
+    "corner_rows_layout": "Level of education",
+    "value_header": "Value",
+    "code_header": "Code",
+    "indicators_heading": "Indicators"
+  },
+  "SCRIPT": true,
+  "IND": []
+}

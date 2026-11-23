@@ -32,12 +32,38 @@ Then open the address Vite prints (usually http://localhost:5173).
 In the GitHub repository settings, set Pages > Source to "GitHub Actions" once.
 The build uses relative paths (`base: './'`), so `dist/` also works from any static web server or folder.
 
+## Input files
+
+The lab has no layout of its own in the code. Two input files in `config/` drive it. Both are made by a person
+(by hand or with AI), not by a script. Everything after them is done by the code, the same way each time.
+
+| File | Who makes it | How |
+| --- | --- | --- |
+| `config/a2-step1-input.json` | Made once with AI in the uis-d-platform GitHub repository, checked by hand. Copied here by hand. | AI read the A2 sheet of the Excel questionnaire and the lists typed into the old form build script, and wrote them as JSON. The result was checked against the Excel. |
+| `config/a2-lab-input.json` | Made once with AI for the lab. Edited by hand when the grid should look different. | AI moved the column titles, widths, codes and fills that were typed into the lab code (`src/grid.js`, `src/a2-layout.js`) into this file, with no change to the values. |
+| Cells, Excel addresses, totals | The code (`src/a2-layout.js`), each time the page or a test loads. | Worked out from the two files above. Not saved to a file. |
+
+`config/a2-step1-input.json` describes the A2 sheet: the 16 levels with their programme and ISCED labels, the groups
+over them, the 3 types of institution, the 3 sexes, the first row (14), the first value column (V) and the 3 columns
+of each level. It is the same file as `docs/architecture/forms/edu-a/a2-step1-input.json` in the uis-d-platform
+GitHub repository, which also drives the build of the two D-Platform forms. Keep the copy here the same as the one
+there: when that file changes, copy it here again and run `npm test`. The lab does not use its D-Platform parts
+(data element and option codes, texts of the HTML form).
+
+`config/a2-lab-input.json` holds what is only the lab's: the titles and widths of the columns, the codes Z, M, X
+and W, and the fills of a total cell. It has the same format as `docs/architecture/forms/edu-a-grid/a2-grid-step1-input.json`
+in the uis-d-platform GitHub repository, plus a comment column, which the D-Platform grid does not have.
+
+Both files explain their fields in a `notes` block, because JSON has no comments.
+
 ## Structure
 
 | File | What it holds |
 | --- | --- |
 | `index.html` | The page: toolbar, grid and import report. |
-| `src/a2-layout.js` | The A2 layout: 16 levels, 9 rows, the grid columns, the Excel address of each cell and the 108 totals. |
+| `config/a2-step1-input.json` | The A2 sheet: levels, groups, rows, sexes and where the values start. A copy from the uis-d-platform GitHub repository. |
+| `config/a2-lab-input.json` | What the grid shows and how: label columns, value, code and comment columns, the codes and the total fills. |
+| `src/a2-layout.js` | The A2 layout built from the two input files: 16 levels, 9 rows, the grid columns, the Excel address of each cell and the 108 totals. |
 | `src/totals.js` | Fills in the totals from their parts, with the rules for the codes Z, M, X and W. |
 | `src/entry-rules.js` | Rules 1 to 3, which refuse an entry: a value must be a number of 0 or more, a code one of Z, M, X, W, a comment 2 to 500 characters. |
 | `src/checks.js` | Rules 4 to 9, which mark a cell yellow with a message: value against code, a comment with X and W, totals against their parts, and the code of a total. |
